@@ -30,6 +30,7 @@ module AgendeSeApi
     # the framework and any gems in your application.
     # I18n config
     config.i18n.load_path += Dir[Rails.root.join('config/locales/**/*.{rb,yml}')]
+    config.autoload_paths += %W["#{config.root}/app/validators/"]
 
     config.i18n.default_locale = :'pt-BR'
     # Only loads a smaller set of middleware suitable for API only apps.
