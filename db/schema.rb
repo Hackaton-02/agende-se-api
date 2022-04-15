@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_14_011622) do
+ActiveRecord::Schema.define(version: 2022_04_15_120216) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,12 +29,44 @@ ActiveRecord::Schema.define(version: 2022_04_14_011622) do
     t.index ["user_id"], name: "index_addresses_on_user_id"
   end
 
+  create_table "consults", force: :cascade do |t|
+    t.datetime "started_at"
+    t.datetime "finish_at"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["user_id"], name: "index_consults_on_user_id"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.decimal "amount", precision: 10, scale: 2
+    t.string "method"
+    t.date "date"
+    t.bigint "consult_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["consult_id"], name: "index_payments_on_consult_id"
+  end
+
+  create_table "room_features", force: :cascade do |t|
+    t.boolean "internet"
+    t.boolean "airConditioned"
+    t.boolean "bathroom"
+    t.boolean "furnished"
+    t.boolean "roomCleaning"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.bigint "room_id"
+    t.index ["room_id"], name: "index_room_features_on_room_id"
+  end
+
   create_table "rooms", force: :cascade do |t|
     t.string "name"
     t.string "description"
     t.decimal "price", precision: 10, scale: 2
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "avaliable", default: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -55,6 +87,8 @@ ActiveRecord::Schema.define(version: 2022_04_14_011622) do
     t.json "tokens"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "phone"
+    t.boolean "whatsapp_avaliable", default: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -62,4 +96,7 @@ ActiveRecord::Schema.define(version: 2022_04_14_011622) do
   end
 
   add_foreign_key "addresses", "users"
+  add_foreign_key "consults", "users"
+  add_foreign_key "payments", "consults"
+  add_foreign_key "room_features", "rooms"
 end
