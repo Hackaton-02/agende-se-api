@@ -11,7 +11,7 @@ RSpec.describe Consult, type: :model do
     expect(subject.errors.keys).to include :started_at
   end
 
-  it "is invalid with current due_date" do
+  it "is invalid with current date" do
     subject.started_at = Time.zone.now
     subject.valid?
     expect(subject.errors.keys).to include :started_at
