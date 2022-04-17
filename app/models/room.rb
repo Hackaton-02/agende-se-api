@@ -1,8 +1,7 @@
 class Room < ApplicationRecord
-    has_one :room_feature
     
     validates :name, presence: true, uniqueness: { case_sensitive: false }
     validates :price, presence: true, numericality: { greater_than: 0 }
-    validates :description, :avaliable, presence: true
-
+    validates :description, presence: true
+    validates  :internet, :avaliable, :airConditioned, :bathroom, :furnished, :roomCleaning, inclusion: { in: [ true, false ] }
 end
