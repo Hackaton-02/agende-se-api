@@ -6,5 +6,16 @@ RSpec.describe Room, type: :model do
   it { is_expected.to validate_presence_of(:price) }
   it { is_expected.to validate_numericality_of(:price).is_greater_than(0) }
   it { is_expected.to validate_presence_of(:description) }
-  it { is_expected.to validate_presence_of(:avaliable) }
+  it { is_expected.to allow_value(%w(true false)).for(:avaliable) }
+  it { is_expected.not_to allow_value(nil).for(:avaliable) }
+  it { is_expected.to allow_value(%w(true false)).for(:internet) }
+  it { is_expected.not_to allow_value(nil).for(:internet) }
+  it { is_expected.to allow_value(%w(true false)).for(:airConditioned) }
+  it { is_expected.not_to allow_value(nil).for(:airConditioned) }
+  it { is_expected.to allow_value(%w(true false)).for(:bathroom) }
+  it { is_expected.not_to allow_value(nil).for(:bathroom) }
+  it { is_expected.to allow_value(%w(true false)).for(:furnished) }
+  it { is_expected.not_to allow_value(nil).for(:furnished) }
+  it { is_expected.to allow_value(%w(true false)).for(:roomCleaning) }
+  it { is_expected.not_to allow_value(nil).for(:roomCleaning) }
 end
