@@ -1,5 +1,7 @@
 module Admin::V1
     class UsersController < ApiController
+      before_action :load_user, only: [:update, :destroy]
+
         def index
           @users = User.where.not(id: @current_user.id)
         end 
@@ -13,19 +15,21 @@ module Admin::V1
         def show; end
 
         def update
-          @user = User.find(params[:id])
           @user.attributes = user_params
           save_user!
         end
 
         def destroy
-          @user = User.find(params[:id])
           @user.destroy!
         rescue
           render_error(fields: @user.errors.messages)
         end
 
         private
+
+        def load_user
+          @user = User.find(params[:id])
+        end
 
         def user_params
           return {} unless params.has_key?(:user)
