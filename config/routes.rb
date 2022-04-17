@@ -5,11 +5,13 @@ Rails.application.routes.draw do
   namespace :admin do
     namespace :v1 do
       resources :users
+      resources :rooms
     end
   end
 
   namespace :storefront do
     namespace :v1 do
+      resources :rooms
     end
   end
   
