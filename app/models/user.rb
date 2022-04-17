@@ -6,8 +6,8 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :validatable
   include DeviseTokenAuth::Concerns::User
 
-  has_one :address
-  has_many :consult
+  has_one :address, dependent: :destroy
+  has_many :consult, dependent: :destroy
   validates :name, presence: true
   validates :profile, presence: true
   validates :phone, presence: true
