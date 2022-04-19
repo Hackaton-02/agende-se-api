@@ -9,4 +9,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to allow_value(%w(true false)).for(:whatsapp_avaliable) }
   it { is_expected.not_to allow_value(nil).for(:whatsapp_avaliable) }
 
+  it_has_behavior_of "like searchable concern", :user, :name
+  it_behaves_like "paginatable concern", :user
+
 end
