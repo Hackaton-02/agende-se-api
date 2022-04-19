@@ -5,19 +5,95 @@ RSpec.describe "Admin::V1::Users", type: :request do
 
     context "GET /users" do
      let(:url) { "/admin/v1/users" }
-     let!(:users) { create_list(:user, 5) }
+     let!(:users) { create_list(:user, 10) }
     
      it "returns all Users" do
       get url, headers: auth_header(login_user)
-      expect(body_json['users'].count).to eq 5
+      expect(body_json['users'].count).to eq 10
      end
 
      it "returns success status" do
       get url, headers: auth_header(login_user)
       expect(response).to have_http_status(:ok)
      end 
+
+     it_behaves_like 'pagination meta attributes', { page: 1, length: 10, total: 10, total_pages: 1 } do
+      before { get url, headers: auth_header(login_user) }
+    end
+
+    context "with search[name] param" do
+      let!(:search_name_users) do
+        users = [] 
+        15.times { |n| users << create(:user, name: "Search #{n + 1}") }
+        users 
+      end
+
+      let(:search_params) { { search: { name: "Search" } } }
+
+      it "returns only searched users limited by default pagination" do
+        get url, headers: auth_header(login_user), params: search_params
+        expected_users = search_name_users[0..9].as_json()
+        expect(body_json['users']).to contain_exactly *expected_users
+      end
+
+      it "returns success status" do
+        get url, headers: auth_header(login_user), params: search_params
+        expect(response).to have_http_status(:ok)
+      end
+
+      it_behaves_like 'pagination meta attributes', { page: 1, length: 10, total: 15, total_pages: 2 } do
+        before { get url, headers: auth_header(login_user), params: search_params }
+      end
+    end
+
+    context "with pagination params" do
+      let(:page) { 2 }
+      let(:length) { 5 }
+
+      let(:pagination_params) { { page: page, length: length } }
+
+      it "returns records sized by :length" do
+        get url, headers: auth_header(login_user), params: pagination_params
+        expect(body_json['users'].count).to eq length
+      end
+      
+      it "returns users limited by pagination" do
+        get url, headers: auth_header(login_user), params: pagination_params
+        expected_users = users[5..9].as_json()
+        expect(body_json['users']).to contain_exactly *expected_users
+      end
+
+      it "returns success status" do
+        get url, headers: auth_header(login_user), params: pagination_params
+        expect(response).to have_http_status(:ok)
+      end
+
+      it_behaves_like 'pagination meta attributes', { page: 2, length: 5, total: 10, total_pages: 2 } do
+        before { get url, headers: auth_header(login_user), params: pagination_params }
+      end
+    end
+
+    context "with order params" do
+      let(:order_params) { { order: { name: 'desc' } } }
+  
+      it "returns ordered users limited by default pagination" do
+        get url, headers: auth_header(login_user), params: order_params
+        users.sort! { |a, b| b[:name] <=> a[:name] }
+        expected_return = users[0..9].as_json()
+        expect(body_json['users']).to contain_exactly *expected_return
+      end
+  
+      it "returns success status" do
+        get url, headers: auth_header(login_user), params: order_params
+        expect(response).to have_http_status(:ok)
+      end
+  
+      it_behaves_like 'pagination meta attributes', { page: 1, length: 10, total: 10, total_pages: 1 } do
+        before { get url, headers: auth_header(login_user), params: order_params }
+      end
+    end  
    end
-   
+
     context "POST /users" do
      let(:url) { "/admin/v1/users" }
   
@@ -138,18 +214,18 @@ RSpec.describe "Admin::V1::Users", type: :request do
       end
 
       # it 'removes all associated with user' do
-      #   product_categories = create_list(:product_category, 3, category: category)
+      #   address = create_list(:address, 3, category: category)
       #   delete url, headers: auth_header(user)
-      #   expected_product_categories = ProductCategory.where(id: product_categories.map(&:id))
-      #   expect(expected_product_categories.count).to eq 0
+      #   expected_address = ProductCategory.where(id: address.map(&:id))
+      #   expect(expected_address.count).to eq 0
       # end
 
       # it 'does not remove unassociated product categories' do
-      #   product_categories = create_list(:product_category, 3)
+      #   address = create_list(:address, 3)
       #   delete url, headers: auth_header(user)
-      #   present_product_categories_ids = product_categories.map(&:id)
-      #   expected_product_categories = ProductCategory.where(id: present_product_categories_ids)
-      #   expect(expected_product_categories.ids).to contain_exactly(*present_product_categories_ids)
+      #   present_address_ids = address.map(&:id)
+      #   expected_address = ProductCategory.where(id: present_address_ids)
+      #   expect(expected_address.ids).to contain_exactly(*present_address_ids)
       # end
 
     end
