@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   namespace :storefront do
     namespace :v1 do
       resources :rooms
+      resources :address
     end
   end
   
