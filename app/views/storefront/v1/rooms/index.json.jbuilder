@@ -1,3 +1,7 @@
 json.rooms do
-    json.array! @rooms
+    json.array! @loading_service.records
   end
+
+  json.meta do
+    json.partial! 'shared/pagination', pagination: @loading_service.pagination
+ end
