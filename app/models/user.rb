@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 class User < ActiveRecord::Base
+  include LikeSearchable
+  include Paginatable
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+         
   include DeviseTokenAuth::Concerns::User
 
   has_one :address, dependent: :destroy
