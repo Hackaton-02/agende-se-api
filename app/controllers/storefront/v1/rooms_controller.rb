@@ -3,7 +3,9 @@ module Storefront::V1
       before_action :load_room, only: [:show]
 
     def index
-      @rooms = Room.all
+      permitted = params.permit({ search: :name }, { order: {} }, :page, :length)
+      @loading_service = Admin::ModelLoadingService.new(Room.all, permitted)
+      @loading_service.call
     end
 
     def show; end
