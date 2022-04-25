@@ -18,10 +18,7 @@ RSpec.describe "Storefront::V1::Addresses", type: :request do
    
          it 'returns last added Address' do
            post url, headers: auth_header(login_user), params: address_params
-           expected_address = Address.last.as_json(
-             only: %i[id number state street user_id
-             city zipcode country complement]
-            )
+           expected_address = build_address_struture(Address.last, login_user)
            expect(body_json['address']).to eq expected_address
          end
    
@@ -52,5 +49,17 @@ RSpec.describe "Storefront::V1::Addresses", type: :request do
            expect(response).to have_http_status(:unprocessable_entity)
          end
        end 
+    end
+
+    def build_address_struture(address, user)
+      json = address.as_json(
+        only: %i[id number state street 
+        city zipcode country complement]
+       )
+       json['user'] = user.as_json(
+         only: %i[allow_password_change created_at email id name phone profile
+         provider uid updated_at whatsapp_avaliable]
+        )
+       json
     end
 end
