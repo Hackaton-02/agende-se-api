@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_17_183911) do
+ActiveRecord::Schema.define(version: 2022_04_24_212659) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,8 @@ ActiveRecord::Schema.define(version: 2022_04_17_183911) do
     t.bigint "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "room_rent_id"
+    t.index ["room_rent_id"], name: "index_consults_on_room_rent_id"
     t.index ["user_id"], name: "index_consults_on_user_id"
   end
 
@@ -58,6 +60,19 @@ ActiveRecord::Schema.define(version: 2022_04_17_183911) do
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "room_id"
     t.index ["room_id"], name: "index_room_features_on_room_id"
+  end
+
+  create_table "room_rents", force: :cascade do |t|
+    t.date "started_at"
+    t.date "finish_at"
+    t.bigint "user_id", null: false
+    t.bigint "room_id", null: false
+    t.decimal "price", precision: 10, scale: 2
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.text "description"
+    t.index ["room_id"], name: "index_room_rents_on_room_id"
+    t.index ["user_id"], name: "index_room_rents_on_user_id"
   end
 
   create_table "rooms", force: :cascade do |t|
@@ -101,7 +116,10 @@ ActiveRecord::Schema.define(version: 2022_04_17_183911) do
   end
 
   add_foreign_key "addresses", "users"
+  add_foreign_key "consults", "room_rents"
   add_foreign_key "consults", "users"
   add_foreign_key "payments", "consults"
   add_foreign_key "room_features", "rooms"
+  add_foreign_key "room_rents", "rooms"
+  add_foreign_key "room_rents", "users"
 end
