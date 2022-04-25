@@ -10,7 +10,8 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   has_one :address, dependent: :destroy
-  has_many :consult, dependent: :destroy
+  has_many :consults, dependent: :destroy
+  has_many :room_rents, dependent: :destroy
   validates :name, presence: true
   validates :profile, presence: true
   validates :phone, presence: true
