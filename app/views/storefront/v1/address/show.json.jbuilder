@@ -1,3 +1,3 @@
 json.address do
-    json.(@address, :id, :number, :state, :street, :user_id, :city, :zipcode, :country, :complement)
+    json.(@address, :id, :number, :state, :street, :user, :city, :zipcode, :country, :complement)
   end
