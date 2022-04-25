@@ -1,6 +1,6 @@
 module Admin::V1
     class UsersController < ApiController
-      before_action :load_user, only: [:update, :destroy]
+      before_action :load_user, only: [:update, :destroy, :show]
 
         def index
           scope_without_current_user = User.where.not(id: @current_user.id)
