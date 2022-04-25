@@ -109,7 +109,7 @@ RSpec.describe "Admin::V1::Users", type: :request do
       it 'returns last added User' do
         post url, headers: auth_header(login_user), params: user_params
         expected_user = User.last.as_json(
-          only: %i(id name email profile)
+          only: %i(id name email profile whatsapp_avaliable)
         )
         expect(body_json['user']).to eq expected_user
       end
@@ -148,6 +148,7 @@ RSpec.describe "Admin::V1::Users", type: :request do
 
       context "with valid params" do
         let(:new_name) { 'Johnny Brown' }
+        let!(:address) { create(:address) }
         let(:user_params) { { user: attributes_for(:user, name: new_name) }.to_json }
 
         it 'updates User' do
@@ -159,7 +160,7 @@ RSpec.describe "Admin::V1::Users", type: :request do
         it 'returns updated User' do
           patch url, headers: auth_header(login_user), params: user_params
           user.reload
-          expected_user = user.as_json(only: %i(id name email profile))
+          expected_user = user.as_json(only: %i(id name email profile whatsapp_avaliable))
           expect(body_json['user']).to eq expected_user
         end
 
@@ -193,7 +194,7 @@ RSpec.describe "Admin::V1::Users", type: :request do
       end
     end
 
-    context "DELETE /categories/:id" do
+    context "DELETE /users/:id" do
       let!(:user) { create(:user) }
       let(:url) { "/admin/v1/users/#{user.id}" }
 
@@ -212,22 +213,6 @@ RSpec.describe "Admin::V1::Users", type: :request do
         delete url, headers: auth_header(login_user)
         expect(body_json).to_not be_present
       end
-
-      # it 'removes all associated with user' do
-      #   address = create_list(:address, 3, category: category)
-      #   delete url, headers: auth_header(user)
-      #   expected_address = ProductCategory.where(id: address.map(&:id))
-      #   expect(expected_address.count).to eq 0
-      # end
-
-      # it 'does not remove unassociated product categories' do
-      #   address = create_list(:address, 3)
-      #   delete url, headers: auth_header(user)
-      #   present_address_ids = address.map(&:id)
-      #   expected_address = ProductCategory.where(id: present_address_ids)
-      #   expect(expected_address.ids).to contain_exactly(*present_address_ids)
-      # end
-
     end
   end
 end
