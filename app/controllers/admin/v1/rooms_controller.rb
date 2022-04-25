@@ -1,6 +1,6 @@
 module Admin::V1
     class RoomsController < ApiController
-      before_action :load_room, only: [:update, :destroy]
+      before_action :load_room, only: [:update, :destroy, :show]
 
         def create
           @room = Room.new
