@@ -49,6 +49,12 @@ RSpec.describe "Especialista::V1::RoomRents", type: :request do
        end.to change(RoomRent, :count).by(1)
      end
 
+     it 'adds a new Book' do
+      expect do
+        post url, headers: auth_header(login_user), params: room_rent_params
+      end.to change(Book, :count).by(1)
+    end
+
      it 'returns last added Room' do
        post url, headers: auth_header(login_user), params: room_rent_params
        expected_return = build_room_rent_structure(RoomRent.last)
