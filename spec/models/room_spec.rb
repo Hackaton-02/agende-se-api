@@ -19,6 +19,7 @@ RSpec.describe Room, type: :model do
   it { is_expected.to allow_value(%w(true false)).for(:roomCleaning) }
   it { is_expected.not_to allow_value(nil).for(:roomCleaning) }
   it { is_expected.to have_many(:room_rents).dependent(:destroy) }
+  it { is_expected.to have_many(:books).dependent(:destroy) }
 
   it_behaves_like "paginatable concern", :room
   it_has_behavior_of "like searchable concern", :room, :name

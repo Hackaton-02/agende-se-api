@@ -11,6 +11,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:room_rents).dependent(:destroy) }
   it { is_expected.to have_many(:consults).dependent(:destroy) }
   it { is_expected.to have_one(:address).dependent(:destroy) }
+  it { is_expected.to have_many(:books).dependent(:destroy) }
 
   it_has_behavior_of "like searchable concern", :user, :name
   it_behaves_like "paginatable concern", :user

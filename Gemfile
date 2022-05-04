@@ -24,6 +24,8 @@ gem 'jbuilder', '~> 2.10.1'
 # Auth
 gem 'devise_token_auth'
 
+gem 'sendgrid-ruby'
+
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
 
@@ -36,6 +38,7 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'rspec-rails', '~> 4.0.1'
+  gem "dotenv-rails"
   gem 'shoulda-matchers', '~> 4.0'
   gem 'database_cleaner'
 end

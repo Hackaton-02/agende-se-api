@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe "Admin::V1::Consults", type: :request do
+RSpec.describe "Storefront::V1::Consults", type: :request do
     let!(:login_user) { create(:user) }
 
     context "GET /consults" do
-    let(:url) { "/admin/v1/consults" }
-    let!(:consults) { create_list(:consult, 10) }
+    let(:url) { "/storefront/v1/consults" }
+    let!(:consults) { create_list(:consult, 10, user_id: login_user.id) }
        
     it "returns all Consults" do
      get url, headers: auth_header(login_user)
@@ -21,7 +21,7 @@ RSpec.describe "Admin::V1::Consults", type: :request do
   context "GET /consult/:id" do
     let!(:payment) { create(:payment) }
     let!(:consult)  { create(:consult, user: login_user, payment_attributes: { amount: payment.amount, method: payment.method, date: payment.date } ) }
-    let(:url) { "/admin/v1/consults/#{consult.id}" }
+    let(:url) { "/storefront/v1/consults/#{consult.id}" }
 
     it "returns requested Consult" do
       get url, headers: auth_header(login_user)
@@ -36,7 +36,7 @@ RSpec.describe "Admin::V1::Consults", type: :request do
   end
 
   context "POST /consults" do
-    let(:url) { "/admin/v1/consults" }
+    let(:url) { "/storefront/v1/consults" }
     let!(:user) { create(:user) }
     let!(:rent) { create(:room_rent)}
     context "with valid params" do
@@ -85,7 +85,7 @@ RSpec.describe "Admin::V1::Consults", type: :request do
     it 'returns error message' do
       post url, headers: auth_header(login_user), params: consult_invalid_params
       expect(body_json['errors']['fields']).to have_key('started_at')
-      expect(body_json['errors']['fields']).to have_key('user')
+      expect(body_json['errors']['fields']).to have_key('room_rent')
     end
 
     it 'returns unprocessable_entity status' do
@@ -103,7 +103,7 @@ RSpec.describe "Admin::V1::Consults", type: :request do
   context "PATCH /consults/:id" do
     let!(:payment) { create(:payment) }
     let!(:consult)  { create(:consult, user: login_user, payment_attributes: { amount: payment.amount, method: payment.method, date: payment.date } ) }
-    let(:url) { "/admin/v1/consults/#{consult.id}" }
+    let(:url) { "/storefront/v1/consults/#{consult.id}" }
 
     context "with valid params" do
       let(:new_date) { 1.month.from_now }
@@ -155,7 +155,7 @@ RSpec.describe "Admin::V1::Consults", type: :request do
   context "DELETE /consults/:id" do
     let!(:payment) { create(:payment) }
     let!(:consult)  { create(:consult, user: login_user, payment_attributes: { amount: payment.amount, method: payment.method, date: payment.date } ) }
-    let(:url) { "/admin/v1/consults/#{consult.id}" }
+    let(:url) { "/storefront/v1/consults/#{consult.id}" }
 
     it 'removes Consult' do
       expect do  
