@@ -35,7 +35,17 @@ Rails.application.configure do
   # config.action_cable.mount_path = nil
   # config.action_cable.url = 'wss://example.com/cable'
   # config.action_cable.allowed_request_origins = [ 'http://example.com', /http:\/\/example.*/ ]
-
+  ActionMailer::Base.smtp_settings = {
+    :address => 'smtp.sendgrid.net',
+    :port => '587',
+    :authentication => :plain,
+    :user_name => Rails.application.credentials.dig(:user_name),
+    :password => Rails.application.credentials.dig(:password),
+    :domain => 'heroku.com',
+    :enable_starttls_auto => true
+  }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.default_url_options ={:host => 'yourherokuapp.herokuapp.com', :protocol => 'https'}
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 
