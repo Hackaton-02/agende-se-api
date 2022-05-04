@@ -48,6 +48,12 @@ RSpec.describe "Admin::V1::Consults", type: :request do
        end.to change(Consult, :count).by(1)
      end
 
+     it 'adds a new Book' do
+      expect do
+        post url, headers: auth_header(login_user), params: consult_params
+      end.to change(Book, :count).by(1)
+    end
+
      it 'returns last added Consult' do
        post url, headers: auth_header(login_user), params: consult_params
        expected_return = build_consult_structure(Consult.last, login_user)
