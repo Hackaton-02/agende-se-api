@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_24_212659) do
+ActiveRecord::Schema.define(version: 2022_05_01_121856) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,18 @@ ActiveRecord::Schema.define(version: 2022_04_24_212659) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_id"], name: "index_addresses_on_user_id"
+  end
+
+  create_table "books", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "room_id", null: false
+    t.boolean "admin", default: false
+    t.bigint "recepient_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "accepted", default: 0
+    t.index ["room_id"], name: "index_books_on_room_id"
+    t.index ["user_id"], name: "index_books_on_user_id"
   end
 
   create_table "consults", force: :cascade do |t|
@@ -71,6 +83,8 @@ ActiveRecord::Schema.define(version: 2022_04_24_212659) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "description"
+    t.string "title"
+    t.text "especialization"
     t.index ["room_id"], name: "index_room_rents_on_room_id"
     t.index ["user_id"], name: "index_room_rents_on_user_id"
   end
@@ -116,6 +130,8 @@ ActiveRecord::Schema.define(version: 2022_04_24_212659) do
   end
 
   add_foreign_key "addresses", "users"
+  add_foreign_key "books", "rooms"
+  add_foreign_key "books", "users"
   add_foreign_key "consults", "room_rents"
   add_foreign_key "consults", "users"
   add_foreign_key "payments", "consults"
