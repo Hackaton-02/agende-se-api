@@ -4,8 +4,8 @@ RSpec.describe RoomRent, type: :model do
   it { is_expected.to validate_presence_of(:started_at) }
   it { is_expected.to validate_presence_of(:finish_at) }
   it { is_expected.to validate_presence_of(:price) }
-#  it { is_expected.to validate_presence_of(:description) }
- # it { is_expected.to validate_presence_of(:especialization) }
+  it { is_expected.to validate_presence_of(:description) }
+  it { is_expected.to validate_presence_of(:title) }
   it { is_expected.to belong_to :user }
   it { is_expected.to belong_to :room }
   it { is_expected.to have_many(:consults) }
