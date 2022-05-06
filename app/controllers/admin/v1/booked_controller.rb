@@ -3,7 +3,7 @@ module Admin::V1
     before_action :load_book, only: [:update, :show]
 
     def index
-        @booked = Book.all.where(admin: true)
+        @booked = Book.all.where(admin: true).with_aggregates
     end
 
     def show; end
