@@ -9,6 +9,8 @@ class Consult < ApplicationRecord
 
   validate :prevent_duplicate_consults
 
+  after_create :set_book
+
   def prevent_duplicate_consults
       @min_date = self.started_at
       @max_date = self.finish_at
@@ -18,5 +20,13 @@ class Consult < ApplicationRecord
     if range_start.present? && range_end.present?
       errors.add(:room_rent, :unavailable_date)
     end
+  end
+
+  private 
+
+  def set_book
+    Book.transaction  do
+      Book.create(user: self.user, recepient_id: self.room_rent.user_id, room_id: self.room_rent.room_id)
+    end 
   end
 end
