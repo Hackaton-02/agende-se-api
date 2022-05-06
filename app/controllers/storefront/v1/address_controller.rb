@@ -1,6 +1,6 @@
 module Storefront::V1
   class AddressController < ApiController
-    before_action :load_address, only: [:update, :destroy]
+    before_action :load_address, only: [:update, :destroy, :show]
 
     def create
       @address = Address.new
@@ -25,7 +25,8 @@ module Storefront::V1
     private
 
     def load_address
-      @address = Address.find(params[:id])
+     # @address = Address.find(params[:id])
+     @address = Address.where(user: params[:id]).first
     end
 
     def address_params
