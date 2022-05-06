@@ -1,9 +1,10 @@
-module Especialista::V1
+module Storefront::V1
   class RoomRentsController < ApiController
     before_action :load_rent, only: [:update, :destroy, :show]
 
     def index
       permitted = params.permit({ search: :title }, { order: {} }, :page, :length)
+     # @loading_service = Admin::ModelLoadingService.new(RoomRent.all.with_aggregates, permitted)
       @loading_service = Admin::ModelLoadingService.new(RoomRent.all, permitted)
       @loading_service.call
     end
@@ -40,7 +41,7 @@ module Especialista::V1
     def room_rent_params
         return {} unless params.has_key?(:room_rent)
         params.require(:room_rent).permit(
-            :id, :started_at, :finish_at, :user_id, :title,
+            :id, :started_at, :finish_at, :user_id,
             :room_id, :price, :description, :especialization
           )
     end
