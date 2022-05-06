@@ -12,6 +12,8 @@ class User < ActiveRecord::Base
   has_one :address, dependent: :destroy
   has_many :consults, dependent: :destroy
   has_many :room_rents, dependent: :destroy
+  has_many :books, dependent: :destroy
+
   validates :name, presence: true
   validates :profile, presence: true
   validates :phone, presence: true
