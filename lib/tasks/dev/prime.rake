@@ -1,4 +1,4 @@
-if Rails.env.development? || Rails.env.test?
+if Rails.env.development? || Rails.env.test? || Rails.env.production?
     require 'factory_bot'
   
     namespace :dev do
@@ -24,10 +24,10 @@ if Rails.env.development? || Rails.env.test?
 
           end
 
-        24.times do
-          room = Room.all.sample
+        24.times do |n|
+          room = Room.all.uniq.sample
           user = User.all.sample
-          create(:room_rent, room_id: room.id, user_id: user.id)
+          create(:room_rent, room_id: room.id, user_id: user.id, started_at: (n + 1).days.from_now, finish_at: (7 + n).days.from_now)
         end
       end
     end
