@@ -41,7 +41,7 @@ module Storefront::V1
     def room_rent_params
         return {} unless params.has_key?(:room_rent)
         params.require(:room_rent).permit(
-            :id, :started_at, :finish_at, :user_id,
+            :id, :started_at, :finish_at, :user_id, :title,
             :room_id, :price, :description, :especialization
           )
     end
