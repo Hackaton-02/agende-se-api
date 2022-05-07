@@ -115,10 +115,10 @@ RSpec.describe "Storefront::V1::RoomRents", type: :request do
     let(:url) { "/storefront/v1/room_rents" }
 
     context "with valid params" do
-      let(:room) { create(:room) }
-     let(:room_rent_params) { { room_rent: attributes_for(:room_rent, user_id: login_user.id, room_id: room.id) }.to_json }
-     let!(:rent) { create(:room_rent, started_at: 1.day.from_now, finish_at: 2.days.from_now, room_id: room.id)}
-     let(:params_new) { { room_rent: attributes_for(:room_rent, user_id: login_user.id, room_id: room.id, started_at: 1.day.from_now, finish_at: 2.days.from_now) }.to_json }
+      let!(:room) { create(:room) }
+      let!(:room_rent_params) { { room_rent: attributes_for(:room_rent, user_id: login_user.id, room_id: room.id) }.to_json }
+      let!(:rent) { create(:room_rent, started_at: 1.day.from_now, finish_at: 2.days.from_now, room_id: room.id)}
+      let!(:params_new) { { room_rent: attributes_for(:room_rent, user_id: login_user.id, room_id: room.id, started_at: 1.day.from_now, finish_at: 2.days.from_now) }.to_json }
 
      it 'adds a new room_rent' do
        expect do
@@ -254,6 +254,8 @@ RSpec.describe "Storefront::V1::RoomRents", type: :request do
 
   def build_room_rent_structure(room_rent) 
     json = room_rent.as_json(only: %i[id description room user price])
+    json['name'] = room_rent.title
+    json['avaliable'] = room_rent.room.avaliable if room_rent.room.present?
     json['room'] = room_rent.room.as_json(only: %i[id name price]) if room_rent.room.present?
     json['user'] = room_rent.user.as_json() if room_rent.user.present?
     json
